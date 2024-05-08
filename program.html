@@ -1,0 +1,79 @@
+To generate HTML pages with forms and links connected to a Django database, you'll need to use Django's template system to render dynamic content. Here's an example of how you could create HTML pages for inventory management and sales tracking:
+
+1. **HTML Page for Inventory Management:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+</head>
+<body>
+    <h1>Inventory Management</h1>
+
+    <h2>Add Item to Inventory</h2>
+    <form action="{% url 'add_inventory_item' %}" method="POST">
+        {% csrf_token %}
+        <label for="item_name">Item Name:</label>
+        <input type="text" id="item_name" name="item_name" required>
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required>
+        <button type="submit">Add Item</button>
+    </form>
+
+    <h2>View Inventory</h2>
+    <ul>
+        {% for item in inventory_items %}
+        <li>{{ item.name }} - {{ item.quantity }}</li>
+        {% empty %}
+        <li>No items in inventory.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+```
+
+2. **HTML Page for Sales Tracking:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Tracking</title>
+</head>
+<body>
+    <h1>Sales Tracking</h1>
+
+    <h2>Record Sale</h2>
+    <form action="{% url 'record_sale' %}" method="POST">
+        {% csrf_token %}
+        <label for="sale_date">Date:</label>
+        <input type="date" id="sale_date" name="sale_date" required>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <button type="submit">Record Sale</button>
+    </form>
+
+    <h2>Sales History</h2>
+    <ul>
+        {% for sale in sales %}
+        <li>{{ sale.date }} - {{ sale.amount }}</li>
+        {% empty %}
+        <li>No sales recorded.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+```
+
+In these examples:
+
+- `{% url 'add_inventory_item' %}` and `{% url 'record_sale' %}` are Django template tags used to generate URLs for form submissions.
+- `{% csrf_token %}` generates a CSRF token to prevent cross-site request forgery.
+- `{% for item in inventory_items %}` and `{% for sale in sales %}` iterate over objects retrieved from the Django database.
+- Replace `add_inventory_item` and `record_sale` with the actual URL names defined in your Django `urls.py` file.
+- Ensure your Django views retrieve and pass the necessary data to these templates for rendering.
